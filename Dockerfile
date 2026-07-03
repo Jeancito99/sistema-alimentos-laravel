@@ -1,9 +1,16 @@
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
-# Instalar extensiones de PHP necesarias
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev \
+# Instalar dependencias del sistema + zip
+RUN apt-get update && apt-get install -y \
+    unzip \
+    zip \
+    libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql
+    && docker-php-ext-install gd pdo pdo_mysql zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -11,11 +18,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 COPY . .
 
-# Instalar dependencias de Laravel
+# Instalar dependencias Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Cambiar permisos
+# Permisos
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 8000
+
 CMD php artisan serve --host=0.0.0.0 --port=8000
