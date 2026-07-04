@@ -13,6 +13,7 @@ class PredictionController extends Controller
 
     public function process(Request $request)
     {
+        
         $request->validate([
             'imagen' => 'required|image|mimes:jpeg,png,jpg',
             'temp' => 'required|numeric',
@@ -24,7 +25,7 @@ class PredictionController extends Controller
         $response = Http::timeout(60)->attach(
             'file',file_get_contents($request->file('imagen')->getRealPath()),
             'alimento.jpg'
-        )->post(env('IA_API_URL') . '/', [
+        )->post(env('IA_API_URL') . '/predict', [
                     'temp' => $request->temp,
                     'hum' => $request->hum
                 ]);
@@ -38,4 +39,13 @@ class PredictionController extends Controller
         }
         return back()->withErrors('Error al conectar con el servicio de IA');
     }
+
+    public function testApi(Request $request)
+{
+    $response = Http::post(env('IA_API_URL').'/test', [
+        'nombre' => $request->nombre
+    ]);
+
+    return $response->json();
+}
 }

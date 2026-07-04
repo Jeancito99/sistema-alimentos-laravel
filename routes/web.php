@@ -9,3 +9,6 @@ Route::get('/', function () {
 
 Route::get('/prediccion', [PredictionController::class, 'showForm']);
 Route::post('/prediccion', [PredictionController::class, 'process'])->name('prediccion.process');
+
+Route::post('/test-api', [PredictionController::class, 'testApi'])
+    ->name('test.api');
