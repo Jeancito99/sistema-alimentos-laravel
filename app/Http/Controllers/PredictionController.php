@@ -24,7 +24,7 @@ class PredictionController extends Controller
         $response = Http::timeout(60)->attach(
             'file',file_get_contents($request->file('imagen')->getRealPath()),
             'alimento.jpg'
-        )->post(env('IA_API_URL') . '/predict', [
+        )->post(env('IA_API_URL') . '/', [
                     'temp' => $request->temp,
                     'hum' => $request->hum
                 ]);
