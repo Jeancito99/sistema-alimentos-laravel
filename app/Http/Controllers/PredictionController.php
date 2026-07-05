@@ -39,13 +39,13 @@ class PredictionController extends Controller
         }
         return back()->withErrors('Error al conectar con el servicio de IA');
     }
-
     public function testApi(Request $request)
-{
-    $response = Http::post(env('IA_API_URL').'/test', [
-        'nombre' => $request->nombre
-    ]);
+    {
+        $response = Http::asForm()->post(env('IA_API_URL').'/test', [
+            'nombre' => $request->nombre
+        ]);
 
-    return $response->json();
-}
+        return response()->json($response->json());
+    }
+
 }
