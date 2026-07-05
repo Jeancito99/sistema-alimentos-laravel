@@ -12,3 +12,4 @@ Route::post('/prediccion', [PredictionController::class, 'process'])->name('pred
 
 Route::post('/test-api', [PredictionController::class, 'testApi'])
     ->name('test.api');
+    
