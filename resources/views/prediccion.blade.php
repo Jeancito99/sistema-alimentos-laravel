@@ -9,14 +9,3 @@
 @if(session('success'))
     <div class="alert alert-info">{{ session('success') }}</div>
 @endif
-
-
-<br>
-<br>
-<form action="{{ route('test.api') }}" method="POST">
-    @csrf
-
-    <input type="text" name="nombre" placeholder="Ingrese su nombre">
-
-    <button type="submit">Enviar</button>
-</form>
