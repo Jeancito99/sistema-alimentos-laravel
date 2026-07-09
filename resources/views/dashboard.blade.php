@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="bg-gray-100 font-sans antialiased text-gray-900">
 
     <div class="flex h-screen">
@@ -14,8 +16,11 @@
             <div>
                 <h2 class="text-2xl font-bold tracking-wider mb-8 text-emerald-400">FastiFood AI</h2>
                 <nav class="space-y-3">
-                    <a href="{{ route('dashboard') }}" class="block py-2.5 px-4 rounded bg-slate-700 font-semibold text-white">📊 Dashboard</a>
-                    <a href="{{ route('prediccion') }}" class="block py-2.5 px-4 rounded text-slate-300 hover:bg-slate-700 hover:text-white transition">🔍 Nuevo Análisis</a>
+                    <a href="{{ route('dashboard') }}"
+                        class="block py-2.5 px-4 rounded bg-slate-700 font-semibold text-white">📊 Dashboard</a>
+                    <a href="{{ route('prediccion') }}"
+                        class="block py-2.5 px-4 rounded text-slate-300 hover:bg-slate-700 hover:text-white transition">🔍
+                        Nuevo Análisis</a>
                 </nav>
             </div>
             <p class="text-xs text-slate-500">v1.0 - SQLite Engine</p>
@@ -23,7 +28,17 @@
 
         <main class="flex-1 p-8 overflow-y-auto">
             <h1 class="text-3xl font-bold text-slate-800 mb-6">Panel de Control de Calidad</h1>
-
+            @if (session('success'))
+                <div
+                    class="mb-6 p-4 bg-emerald-100 border-l-4 border-emerald-500 text-emerald-900 rounded-r-xl shadow-xs flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span>✨</span>
+                        <p class="font-medium text-sm">{{ session('success') }}</p>
+                    </div>
+                    <button onclick="this.parentElement.remove()"
+                        class="text-emerald-500 hover:text-emerald-700 font-bold px-2">×</button>
+                </div>
+            @endif
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-xl shadow-xs border-l-4 border-blue-500">
                     <p class="text-sm text-gray-500 uppercase font-bold tracking-wider">Total Analizados</p>
@@ -40,7 +55,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
+
                 <div class="bg-white p-6 rounded-xl shadow-xs lg:col-span-1 flex flex-col items-center">
                     <h3 class="text-lg font-bold text-slate-700 mb-4 self-start">Distribución de Estados</h3>
                     <div class="w-full max-w-[240px]">
@@ -63,21 +78,23 @@
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 @forelse($historial as $item)
-                                <tr>
-                                    <td class="py-3 px-4 text-xs">{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                                    <td class="py-3 px-4 font-medium text-slate-700">{{ $item->temperatura }}°C</td>
-                                    <td class="py-3 px-4">{{ $item->humedad }}%</td>
-                                    <td class="py-3 px-4 text-center font-bold">{{ $item->dias_restantes }}</td>
-                                    <td class="py-3 px-4">
-                                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full {{ $item->estado == 'Consumible' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
-                                            {{ $item->estado }}
-                                        </span>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 text-xs">{{ $item->created_at->format('d/m/Y H:i') }}</td>
+                                        <td class="py-3 px-4 font-medium text-slate-700">{{ $item->temperatura }}°C</td>
+                                        <td class="py-3 px-4">{{ $item->humedad }}%</td>
+                                        <td class="py-3 px-4 text-center font-bold">{{ $item->dias_restantes }}</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2.5 py-1 text-xs font-semibold rounded-full {{ $item->estado == 'Consumible' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
+                                                {{ $item->estado }}
+                                            </span>
+                                        </td>
+                                    </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="5" class="py-4 text-center text-gray-400">No hay análisis registrados todavía.</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="5" class="py-4 text-center text-gray-400">No hay análisis
+                                            registrados todavía.</td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -112,4 +129,5 @@
         });
     </script>
 </body>
+
 </html>
