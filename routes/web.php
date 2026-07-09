@@ -10,3 +10,6 @@ Route::get('/', function () {
 
 Route::get('/prediccion', [PredictionController::class, 'showForm']);
 Route::post('/prediccion', [PredictionController::class, 'process'])->name('prediccion.process');
+
+// Ruta para visualizar el Dashboard
+Route::get('/dashboard', [PredictionController::class, 'dashboard'])->name('dashboard');
