@@ -20,7 +20,7 @@ class PredictionController extends Controller
         $total = Prediction::count();
         $consumibles = Prediction::where('estado', 'Consumible')->count();
         $desechar = Prediction::where('estado', 'Desechar')->count();
-        
+
         // 2. Obtener los últimos 10 registros para la tabla
         $historial = Prediction::latest()->take(10)->get();
 
@@ -28,45 +28,44 @@ class PredictionController extends Controller
     }
 
     public function process(Request $request)
-    {
-        $request->validate([
-            'imagen' => 'required|image|mimes:jpeg,png,jpg',
-            'temp' => 'required|numeric',
-            'hum' => 'required|numeric',
+{
+    $request->validate([
+        'imagen' => 'required|image|mimes:jpeg,png,jpg',
+        'temp' => 'required|numeric',
+        'hum' => 'required|numeric',
+    ]);
+
+    try {
+        $response = Http::timeout(60)->attach(
+            'file', file_get_contents($request->file('imagen')->getRealPath()),
+            'alimento.jpg'
+        )->post(env('IA_API_URL') . '/predict', [
+            'temp' => $request->temp,
+            'hum' => $request->hum
         ]);
 
-        try {
-            $response = Http::timeout(60)->attach(
-                'file', file_get_contents($request->file('imagen')->getRealPath()),
-                'alimento.jpg'
-            )->post(env('IA_API_URL') . '/predict', [
-                'temp' => $request->temp,
-                'hum' => $request->hum
+        if ($response->successful()) {
+            $data = $response->json();
+
+            // Guardar en SQLite
+            Prediction::create([
+                'temperatura' => $request->temp,
+                'humedad' => $request->hum,
+                'dias_restantes' => $data['dias_restantes'],
+                'estado' => $data['estado']
             ]);
 
-            if ($response->successful()) {
-                $data = $response->json();
-
-                // GUSTO SALVADO: Guardamos la predicción en SQLite automáticamente
-                Prediction::create([
-                    'temperatura' => $request->temp,
-                    'humedad' => $request->hum,
-                    'dias_restantes' => $data['dias_restantes'],
-                    'estado' => $data['estado']
-                ]);
-
-                // CAMBIO AQUÍ: Redirecciona al dashboard con el mensaje de éxito
+            // CAMBIO AQUÍ: Redirecciona al dashboard con el mensaje de éxito
             return redirect()->route('dashboard')->with(
                 'success',
                 '¡Análisis completado! Resultado: ' . $data['dias_restantes'] . ' días (' . $data['estado'] . ').'
             );
-                // return view('dashboard');
-            }
-
-            return back()->withErrors('Error al conectar con el servicio de IA');
-
-        } catch (\Exception $e) {
-            return back()->withErrors('No se pudo establecer conexión con el servicio de IA.');
         }
+
+        return back()->withErrors('Error al conectar con el servicio de IA')->withInput();
+
+    } catch (\Exception $e) {
+        return back()->withErrors('No se pudo establecer conexión con el servicio de IA.')->withInput();
     }
+}
 }
