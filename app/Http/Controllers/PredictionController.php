@@ -65,7 +65,8 @@ class PredictionController extends Controller
         return back()->withErrors('Error al conectar con el servicio de IA')->withInput();
 
     } catch (\Exception $e) {
-        return back()->withErrors('No se pudo establecer conexión con el servicio de IA.')->withInput();
+        // Esto te pintará en el recuadro rojo el error real del sistema
+        return back()->withErrors('Error de conexión técnico: ' . $e->getMessage())->withInput();
     }
 }
 }
