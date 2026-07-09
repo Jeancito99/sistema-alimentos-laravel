@@ -55,10 +55,11 @@ class PredictionController extends Controller
                     'estado' => $data['estado']
                 ]);
 
-                return back()->with(
-                    'success',
-                    'Resultado: ' . $data['dias_restantes'] . ' días. Estado: ' . $data['estado']
-                );
+                // CAMBIO AQUÍ: Redirecciona al dashboard con el mensaje de éxito
+            return redirect()->route('dashboard')->with(
+                'success',
+                '¡Análisis completado! Resultado: ' . $data['dias_restantes'] . ' días (' . $data['estado'] . ').'
+            );
                 // return view('dashboard');
             }
 
