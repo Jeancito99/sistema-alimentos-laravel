@@ -8,7 +8,7 @@ Route::get('/', function () {
     return view('prediccion');
 });
 
-Route::get('/prediccion', [PredictionController::class, 'showForm']);
+Route::get('/prediccion', [PredictionController::class, 'showForm'])->name('prediccion');
 Route::post('/prediccion', [PredictionController::class, 'process'])->name('prediccion.process');
 
 // Ruta para visualizar el Dashboard
