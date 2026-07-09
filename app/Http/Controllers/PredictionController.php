@@ -55,10 +55,11 @@ class PredictionController extends Controller
                     'estado' => $data['estado']
                 ]);
 
-                return back()->with(
-                    'success',
-                    'Resultado: ' . $data['dias_restantes'] . ' días. Estado: ' . $data['estado']
-                );
+                // return back()->with(
+                //     'success',
+                //     'Resultado: ' . $data['dias_restantes'] . ' días. Estado: ' . $data['estado']
+                // );
+                return view('dashboard', compact('total', 'consumibles', 'desechar', 'historial'));
             }
 
             return back()->withErrors('Error al conectar con el servicio de IA');
