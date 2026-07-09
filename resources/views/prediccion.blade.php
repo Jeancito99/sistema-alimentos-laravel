@@ -7,7 +7,7 @@
     <title>Laravel</title>
 </head>
 <body>
-   <form action="{{ route('prediccion.process') }}" method="POST" enctype="multipart/form-data">
+   <form action="{{ route('post_prediccion') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <input type="file" name="imagen" required>
     <input type="number" step="0.1" name="temp" placeholder="Temperatura (°C)" required>
